@@ -26,7 +26,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //herokuのために追記
+        //herokuのために追記右の通りに行ったhttps://colorfree-map.com/heroku-laravel/%20
         Schema::defaultStringLength(191);
+        if (\App::environment('production')) {
+            \URL::forceScheme('https');
+        } // 追加
     }
 }
