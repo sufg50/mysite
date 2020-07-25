@@ -3,10 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Schema; // herokuのために追記
-
-
-
+use Illuminate\Support\Facades\Schema;
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -26,10 +23,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //herokuのために追記右の通りに行ったhttps://colorfree-map.com/heroku-laravel/%20
+        //
         Schema::defaultStringLength(191);
         if (\App::environment('production')) {
             \URL::forceScheme('https');
-        } // 追加
+        }
     }
 }
