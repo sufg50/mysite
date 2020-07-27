@@ -9,7 +9,8 @@ var url = "mongodb://heroku_v52vjggz:gjdrohmubrprcpjm81svdl2aq9@ds131432.mlab.co
 app.use(bodyParser.urlencoded({
     extended: true
 }));
-
+// mongodb://localhost:27017/
+// mongodb://heroku_v52vjggz:gjdrohmubrprcpjm81svdl2aq9@ds131432.mlab.com:31432/heroku_v52vjggz
 app.use(bodyParser.json());
 
 var io =require('socket.io')(http);//トップレベルドメイン。サーバーの中でsocket.ioを動かすイメージ
@@ -123,7 +124,7 @@ app.get('/socket.js',(req,res)=>{
     res.sendFile(__dirname+'/socket.js');
 });
 
-http.listen(3000,()=>{
+http.listen(5000,()=>{
     console.log(`listening on *:${port}`);
 });
 let room=[];
