@@ -3,7 +3,7 @@ const fs = require('fs');
 const bodyParser = require('body-parser');
 const { equal } = require('assert');
 var http = require('http').createServer(app);
-var port = 3000;
+var port = process.env.PORT;
 var MongoClient = require("mongodb").MongoClient;
 var url = "mongodb://heroku_v52vjggz:gjdrohmubrprcpjm81svdl2aq9@ds131432.mlab.com:31432/heroku_v52vjggz";
 app.use(bodyParser.urlencoded({
