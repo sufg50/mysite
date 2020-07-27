@@ -124,7 +124,7 @@ app.get('/socket.js',(req,res)=>{
     res.sendFile(__dirname+'/socket.js');
 });
 
-http.listen(5000,()=>{
+http.listen(port,()=>{
     console.log(`listening on *:${port}`);
 });
 let room=[];
