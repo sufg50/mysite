@@ -1,0 +1,46 @@
+main {
+    display: block;  /* for IE */
+    margin-left: 150px;
+  }
+  
+.menu {
+position: fixed;
+top: 0px;
+left: 0px;
+width: 150px;
+height: 100vh;
+background: lightgray;
+/* スクロールバーを表示 */
+overflow-y: scroll;
+overflow-x: scroll;
+/* IE などのスクロールバーの色設定 */
+scrollbar-face-color: #999;
+scrollbar-track-color: #eee;
+}
+
+ul {
+    list-style: none;
+}
+
+#commentArea{
+    padding: 0px;
+    display: block;
+    width: 800px;
+    height: 200px;
+    overflow-y: scroll;
+    background-color: lightyellow;
+}
+#user_list{
+    padding: 10px;
+    display: block;
+}
+#login_user{
+    padding: 10px;
+    display: block;
+}
+
+#signin{
+    display: block;
+
+
+}

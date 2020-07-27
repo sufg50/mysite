@@ -1,0 +1,28 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ユーザ一覧</title>
+    <div id=user_list></div>
+</head>
+<script>
+
+    //読み込み時
+    $(function () {
+    //サーバーへメッセージを送る
+    let message=2;
+    alert("start");
+    socket.emit('getUser',message);
+
+
+});
+socket.on('getUser',(msg)=>{
+    var dom = $('<p>'+msg+'</p><br>');
+    $("#user_list").append(dom);
+});
+</script>
+<body>
+    
+</body>
+</html> -->

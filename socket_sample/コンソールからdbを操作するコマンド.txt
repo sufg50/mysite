@@ -1,0 +1,12 @@
+全削除
+db.コレクション名（テーブル名）.remove({});
+
+すべて検索
+db.コレクション名.find()
+
+テーブル、コレクションを削除
+db.コレクション名.drop()
+db.products.drop()
+db.signin.drop()
+
+db.signin.remove({});

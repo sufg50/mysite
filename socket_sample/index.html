@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Hello world!</title>
+    <!-- 多分標準ライブラリの読み込み -->
+    <!-- 読み込み順序逆かも -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="socket.js"></script>
+    <link rel="stylesheet" type="text/css" href="./style.css">
+  </head>
+  <body>
+    
+<main>
+    <h1 id="roomTitle">Socket.js Hello, world!</h1>
+
+    <ul id="commentArea"></ul>
+    <p id="whoTyping"></p>
+
+    <!-- トークルームの設定 -->
+    <form id="room">
+      <input type=text value="" id="roomName">
+      <button type="submit"  >ここにチャンネル名を入れてください。</button><br>
+    </form>
+
+    <!-- ニックネームの登録 -->
+    <form id="nic">
+      <input type=text value="" id="nicName">
+      <button type="submit"  >ここにニックネームを入力してください。(任意)</button><br>
+    </form>
+    <!-- コメント送信 -->
+    <form id="co">
+      <input type=text value="" id="comment" onInput="alertValue(this)" >
+      <button type="submit"  >メッセージを送る</button><br>
+    </form>
+    <br>
+    <a href="./login.html">ログイン画面へ戻る</a>
+
+</main>
+<!-- サイドメニュー -->
+<nav class="menu">
+
+  <h4>-ログイン中-</h4>
+  <ul id="login_user">
+  </ul>
+
+  <h4>-user一覧-</h4>
+  <ul id="user_list">
+  </ul>
+
+
+</nav>
+
+
+  </body>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+
+
+<script>
+  //読み込み時
+
+  $(function () {
+  //ＤＢからユーザー一覧を取得
+  socket.emit('getUser',);
+  });
+
+  // expressのreq.params.idを使う
+  // ログイン中のユーザーテーブルから情報を取ってくる。
+  name=location.href.split("index.html")[1];
+  socket.emit('insertUser',name);
+  
+  //idをニックネームとして使う。
+  socket.emit('chat message',name);
+        var dom = $('<li style="margin-left:200px;">'+"私が入室しました"+'</li>');
+        $("#commentArea").append(dom);
+  
+  str2="";
+  function alertValue($this) {
+  console.log("入力中です");
+  socket.emit('message 2',);
+  }
+
+  
+
+
+
+  
+$(function () {
+
+
+  $('#room').submit(function(e) {
+      console.log("roomNameファンクション");
+      e.preventDefault(); // ページのリロードを防いで、socket.idが変更されないようにもしておく
+      var str = document.getElementById("roomName").value;
+      if(str!=""){
+        // サーバーにルームネームを送る。
+        sendEnterRoom(str);
+        // コメントエリアに自分が入室したことを追加する。
+        var dom = $('<li style="margin-left:200px;">'+"私が入室しました"+'</li>');
+        $("#commentArea").append(dom);
+        //<h1>をルームネームに変える
+          var elem = document.getElementById("roomTitle");
+          elem.innerHTML = str;
+        //以前のトーク内容を削除
+          $('#commentArea').empty();
+      }
+      //サーバーへメッセージを送る
+      $('#roomName').val('');
+      return false;
+    });
+
+
+    $('#nic').submit(function(e) {
+      console.log("ニックネームファンクション");
+      e.preventDefault(); // prevents page reloading
+      var str = document.getElementById("nicName").value;
+      if(str!=""){
+        socket.emit('chat message',str);
+        var dom = $('<li style="margin-left:200px;">'+"私が入室しました"+'</li>');
+        $("#commentArea").append(dom);
+      }
+      $('#nicName').val('');
+      return false;
+    });
+
+    $('#co').submit(function(e) {
+      console.log("コメントファンクション");
+      e.preventDefault(); // prevents page reloading
+      var str = document.getElementById("comment").value;
+      if(str!="" && str2!=str){
+
+          //自分のコメントエリアに追加する。
+          var dom = $('<li style="margin-left:200px;">'+str+'</li>');
+          $("#commentArea").append(dom);
+          str2=str;
+          //サーバーへメッセージを送る
+          send(str);
+      }
+      str2=str;
+    
+      //空にする
+      $('#comment').val('');
+      return false;
+    });
+
+
+  });
+</script>
+</html>
+       
