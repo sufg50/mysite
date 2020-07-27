@@ -35,7 +35,7 @@ app.post('/register?',(req,res)=>{
     });
     // テーブルを作成しておく。
     MongoClient.connect(url,(error,client)=>{
-        var db = client.db("sample");
+        var db = client.db("heroku_v52vjggz");
         db.createCollection("products",(error,collection)=>{//コレクションはテーブルと同じ
             
     });
@@ -43,7 +43,7 @@ app.post('/register?',(req,res)=>{
 
     // データベースへ登録する
     MongoClient.connect(url,(error,client)=>{
-        var db = client.db("sample");
+        var db = client.db("heroku_v52vjggz");
         db.collection("products",(error,collection)=>{//コレクションはテーブルと同じ
             
             collection.insertOne(
@@ -59,7 +59,7 @@ app.post('/register?',(req,res)=>{
 
     //ログイン可能なユーザーをtxtに書き込む
     MongoClient.connect(url,(error,client)=>{
-        var db = client.db("sample");
+        var db = client.db("heroku_v52vjggz");
         db.collection("products",(error,collection)=>{//コレクションはテーブルと同じ
             collection.find().toArray((error,docs)=>{
                 const stream = fs.createWriteStream("user.txt");
@@ -84,7 +84,6 @@ app.post('/register?',(req,res)=>{
 });
 
 app.get('/login.html',(req,res)=>{
-
     res.sendFile(__dirname+'/login.html');
 });
 app.get('/style.css',(req,res)=>{
@@ -95,7 +94,7 @@ app.get('/style.css',(req,res)=>{
 app.post('/login.html?',(req,res)=>{
 
     MongoClient.connect(url,(error,client)=>{
-        var db = client.db("sample");
+        var db = client.db("heroku_v52vjggz");
         db.collection("products",(error,collection)=>{//コレクションはテーブルと同じ
             collection.find({$and:[{id: { $eq: req.body.id}},{password: { $eq: req.body.password }}] }).toArray((error,docs)=>{
                 // console.log(docs.length);
@@ -142,7 +141,7 @@ io.on('connection',(socket)=>{//個別にsocketが作られる。ページがリ
     socket.on('insertUser',(name)=>{
     //自分をログインテーブルに追加
     MongoClient.connect(url,(error,client)=>{
-        var db = client.db("sample");
+        var db = client.db("heroku_v52vjggz");
         db.collection("signin",(error,collection)=>{//コレクションはテーブルと同じ
             collection.insertOne(
                 {id: name}
@@ -155,7 +154,7 @@ io.on('connection',(socket)=>{//個別にsocketが作られる。ページがリ
     //ログイン中のユーザー一覧を取得
     let users=[];
     MongoClient.connect(url,(error,client)=>{
-        var db = client.db("sample");
+        var db = client.db("heroku_v52vjggz");
         db.collection("signin",(error,collection)=>{//コレクションはテーブルと同じ
             collection.find().toArray((error,docs)=>{
                 for(let doc of docs){
@@ -186,7 +185,7 @@ io.on('connection',(socket)=>{//個別にsocketが作られる。ページがリ
 
         console.log('dbからログイン情報を削除します。'+url_name[1]);
         MongoClient.connect(url,(error,client)=>{
-            var db = client.db("sample");
+            var db = client.db("heroku_v52vjggz");
             db.collection("signin",(error,collection)=>{//コレクションはテーブルと同じ
                 collection.deleteMany(
                     {id: url_name[1]}
@@ -197,7 +196,7 @@ io.on('connection',(socket)=>{//個別にsocketが作られる。ページがリ
         // ログイン後の情報を全ユーザーに送る
         let users=[];
         MongoClient.connect(url,(error,client)=>{
-            var db = client.db("sample");
+            var db = client.db("heroku_v52vjggz");
             db.collection("signin",(error,collection)=>{//コレクションはテーブルと同じ
                 collection.find().toArray((error,docs)=>{
                     for(let doc of docs){
@@ -265,7 +264,7 @@ io.on('connection',(socket)=>{//個別にsocketが作られる。ページがリ
         // 自分自身を含む
         socket.emit('getUser',users);
         MongoClient.connect(url,(error,client)=>{
-            var db = client.db("sample");
+            var db = client.db("heroku_v52vjggz");
             db.collection("products",(error,collection)=>{//コレクションはテーブルと同じ
                 collection.find().toArray((error,docs)=>{
                     for(let doc of docs){
