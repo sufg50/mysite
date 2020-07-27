@@ -28,7 +28,7 @@ app.post('/register?',(req,res)=>{
 
     // テーブルを作成しておく。作成済みでも大丈夫みたい
     MongoClient.connect(url,(error,client)=>{
-        var db = client.db("sample");
+        var db = client.db("heroku_v52vjggz");
         db.createCollection("signin",(error,collection)=>{//コレクションはテーブルと同じ
             
     });
