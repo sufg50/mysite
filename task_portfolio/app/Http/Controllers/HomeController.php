@@ -25,6 +25,6 @@ class HomeController extends Controller
     {
         //return view('home');
         //上記を以下に変更。
-        return redirect('main_game/index');
+        return redirect('top/index');
     }
 }

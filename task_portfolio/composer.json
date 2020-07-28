@@ -61,7 +61,7 @@
             "@php artisan key:generate --ansi"
         ],
         "post-install-cmd": [
-            "ln -sr storage/app/public/charachips public/storage/charachips"
+            "ln -sr storage/app/public public/storage"
           
         ]
     }
