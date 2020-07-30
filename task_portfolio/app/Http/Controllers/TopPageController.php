@@ -37,8 +37,8 @@ class TopPageController extends Controller
         // ファイルを閉じる
         fclose($fp);
         // ファイルを出力する
-        readfile($filename);
-         dd ($html_source);
+        // readfile($filename);
+        //  dd ($html_source);
 
         return view('top.index',compact('id','name','photo'));
     }
