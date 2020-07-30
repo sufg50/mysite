@@ -30607,7 +30607,7 @@ var GeneralMap = /*#__PURE__*/function () {
   }, {
     key: "getRainFallCSV",
     value: function getRainFallCSV(game) {
-      console.log("雨量が読み込まれました！");
+      console.log("雨量２が読み込まれました！");
       var self = this; // thisをselfに代入する理由→https://anz-note.tumblr.com/post/81446635196/javascriptでクラスのメソッド内の関数から自身のメソッドを呼ぶには-ω
 
       return new Promise(function (resolve, reject) {
@@ -30642,11 +30642,28 @@ var GeneralMap = /*#__PURE__*/function () {
 
       for (var i = 0; i < tmp.length - 1; ++i) {
         //tmp.lengthに-1をするのは、何も入ってない行をいれないため
-        result[tmp[i].split(',')[0]] = tmp[i].split(',')[1];
-      } // 雨量の更新日時を取得
+        //連想配列でkeyは観測所名valueは雨量
+        result[tmp[i].split(',')[3].split("（")[0]] = tmp[i].split(',')[9];
+      } // 現在日時を取得して年/月/日/時間にする
 
 
-      this.getDate(tmp[1].split(',')[2], game);
+      var nitizi = tmp[1].split(',')[4] + "年" + tmp[1].split(',')[5] + "月" + tmp[1].split(',')[6] + "日" + tmp[1].split(',')[7] + "時" + tmp[1].split(',')[8] + "分";
+      console.log("testアメダス");
+      console.log(tmp[1].split(',')[5] + "年" + tmp[1].split(',')[6] + "月" + tmp[1].split(',')[7] + "日" + tmp[1].split(',')[8] + "時" + tmp[1].split(',')[9] + "分");
+      console.log(tmp[1].split(',')[0]);
+      console.log(tmp[1].split(',')[1]);
+      console.log(tmp[1].split(',')[2]);
+      console.log(tmp[1].split(',')[3]);
+      console.log(tmp[1].split(',')[4]);
+      console.log(tmp[1].split(',')[5]);
+      console.log(tmp[1].split(',')[6]);
+      console.log(tmp[1].split(',')[7]);
+      console.log(tmp[1].split(',')[8]);
+      console.log(tmp[1].split(',')[9]);
+      console.log(tmp[1].split(',')[10]);
+      console.log("testアメダス終わり"); // 雨量の更新日時を設定
+
+      this.getDate(nitizi, game);
       return result;
     }
   }, {
@@ -30978,7 +30995,7 @@ var SceneManeger = /*#__PURE__*/function () {
       textArea["delete"](game);
       promise.then(function (value) {
         promise2.then(function (value2) {
-          console.log("雨量");
+          console.log("雨量２");
           var c = 1;
           game.rainfalls = value2;
 
