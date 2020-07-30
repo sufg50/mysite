@@ -63,14 +63,11 @@ export default class GeneralMap{
         // 各行ごとにカンマで区切った文字列を要素とした二次元配列を生成
         for(var i=0;i<tmp.length-1;++i){//tmp.lengthに-1をするのは、何も入ってない行をいれないため
             //連想配列でkeyは観測所名valueは雨量
-            result[tmp[i].split(',')[2].split("（")[0]] = tmp[i].split(',')[9];
+            result[tmp[i].split(',')[3].split("（")[0]] = tmp[i].split(',')[9];
         }
         // 現在日時を取得して年/月/日/時間にする
         var nitizi=tmp[1].split(',')[4]+"年"+tmp[1].split(',')[5]+"月"+tmp[1].split(',')[6]+"日"+tmp[1].split(',')[7]+"時"+tmp[1].split(',')[8]+"分"
         
-        alert(nitizi);
-        alert(tmp[1].split(',')[2].split("（")[0])
-        alert(tmp[1].split(',')[9])
 
         console.log("testアメダス");
         console.log(tmp[1].split(',')[5]+"年"+tmp[1].split(',')[6]+"月"+tmp[1].split(',')[7]+"日"+tmp[1].split(',')[8]+"時"+tmp[1].split(',')[9]+"分");
