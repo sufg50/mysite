@@ -74,9 +74,8 @@ export default class GeneralMap{
 
 
         // 雨量の更新日時を設定
-        
         this.getDate(nitizi,game);
-        
+
         return result;
 
     }
