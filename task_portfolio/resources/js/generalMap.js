@@ -68,25 +68,6 @@ export default class GeneralMap{
         // 現在日時を取得して年/月/日/時間にする
         var nitizi=tmp[1].split(',')[4]+"年"+tmp[1].split(',')[5]+"月"+tmp[1].split(',')[6]+"日"+tmp[1].split(',')[7]+"時"+tmp[1].split(',')[8]+"分"
         
-        alert(nitizi);
-        alert(tmp[1].split(',')[2].split("（")[0])
-        alert(tmp[1].split(',')[9])
-
-        console.log("testアメダス");
-        console.log(tmp[1].split(',')[0]);
-        console.log(tmp[1].split(',')[1]);
-        console.log(tmp[1].split(',')[2]);
-        console.log(tmp[1].split(',')[3]);
-        console.log(tmp[1].split(',')[4]);
-        console.log(tmp[1].split(',')[5]);
-        console.log(tmp[1].split(',')[6]);
-        console.log(tmp[1].split(',')[7]);
-        console.log(tmp[1].split(',')[8]);
-        console.log(tmp[1].split(',')[9]);
-        console.log(tmp[1].split(',')[10]);
-        console.log("testアメダス終わり");
-
-
         // 雨量の更新日時を設定
         this.getDate(nitizi,game);
         
