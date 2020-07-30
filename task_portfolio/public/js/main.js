@@ -31431,7 +31431,7 @@ var ViewArea = /*#__PURE__*/function () {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\xampp\htdocs\task_portfolio\resources\js\main.js */"./resources/js/main.js");
+module.exports = __webpack_require__(/*! C:\Program Files\Git\mysite\task_portfolio\resources\js\main.js */"./resources/js/main.js");
 
 
 /***/ })

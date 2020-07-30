@@ -20,7 +20,25 @@ class TopPageController extends Controller
         $user_p = UserPhoto::find($id);
         $photo = $user_p->user_photo;
         
+        //webスクレイピング部分
+        $URL = "https://www.data.jma.go.jp/obd/stats/data/mdrr/pre_rct/alltable/pre1h00_rct.csv"; //取得したいサイトのURL
+        $html_source = file_get_contents($URL);
+        $filename = './storage/mapdata/rainfall2.csv';
+ 
+        // fopenでファイルを開く（'w'は上書きモードで開く）
+        $fp = fopen($filename, 'w');
+        
+        //shift_jisからutf-8に変換する。
+        $html_source=mb_convert_encoding($html_source,"utf-8","sjis");
 
+        // fwriteで文字列を書き込む
+        fwrite($fp, $html_source);
+        
+        // ファイルを閉じる
+        fclose($fp);
+        // ファイルを出力する
+        //readfile($filename);
+        //  dd ($html_source);
 
         return view('top.index',compact('id','name','photo'));
     }
