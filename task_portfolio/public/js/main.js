@@ -30643,7 +30643,7 @@ var GeneralMap = /*#__PURE__*/function () {
       for (var i = 0; i < tmp.length - 1; ++i) {
         //tmp.lengthに-1をするのは、何も入ってない行をいれないため
         //連想配列でkeyは観測所名valueは雨量
-        result[tmp[i].split(',')[3].split("（")[0]] = tmp[i].split(',')[9];
+        result[tmp[i].split(',')[2].split("（")[0]] = tmp[i].split(',')[9];
       } // 現在日時を取得して年/月/日/時間にする
 
 
