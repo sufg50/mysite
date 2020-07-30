@@ -88,7 +88,7 @@ export default class SceneManeger{
         promise.then((value) => {
           promise2.then((value2) => {
 
-            console.log("雨量");            
+            console.log("雨量２");            
             let c=1;
 
             game.rainfalls=value2;
