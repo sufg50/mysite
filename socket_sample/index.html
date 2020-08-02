@@ -6,12 +6,15 @@
     <!-- 読み込み順序逆かも -->
     <script src="/socket.io/socket.io.js"></script>
     <script src="socket.js"></script>
+    <script src="indexUI.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <link rel="stylesheet" type="text/css" href="./style.css">
   </head>
-  <body>
+
+<body>
     
 <main>
-    <h1 id="roomTitle">Socket.js Hello, world!</h1>
+    <h1 id="roomTitle">Socket.js Hello, world!2</h1>
 
     <ul id="commentArea"></ul>
     <p id="whoTyping"></p>
@@ -49,42 +52,37 @@
 
 
 </nav>
-
-
-  </body>
-  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+</body>
 
 
 
 <script>
-  //読み込み時
+  $(function () {  //読み込み時
 
-  $(function () {
   //ＤＢからユーザー一覧を取得
   socket.emit('getUser',);
-  });
 
-  // expressのreq.params.idを使う
-  // ログイン中のユーザーテーブルから情報を取ってくる。
+  // ログイン中のユーザーテーブルから情報を取ってくる。expressのreq.params.idを使う
   name=location.href.split("index.html")[1];
   socket.emit('insertUser',name);
+
+  });// 読み込み時終わり
+
+
   
-  //idをニックネームとして使う。
+  // idをニックネームとして使う。
   socket.emit('chat message',name);
         var dom = $('<li style="margin-left:200px;">'+"私が入室しました"+'</li>');
         $("#commentArea").append(dom);
   
+
+  // 誰かが入力中の時    
   str2="";
   function alertValue($this) {
   console.log("入力中です");
   socket.emit('message 2',);
   }
 
-  
-
-
-
-  
 $(function () {
 
 

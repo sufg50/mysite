@@ -1,7 +1,8 @@
 var app = require('express')();
 const fs = require('fs');
 const bodyParser = require('body-parser');
-const { equal } = require('assert');
+const { equal, rejects } = require('assert');
+const { resolve } = require('path');
 var http = require('http').createServer(app);
 var port = process.env.PORT || 5000;
 var MongoClient = require("mongodb").MongoClient;
@@ -89,7 +90,9 @@ app.get('/login.html',(req,res)=>{
 app.get('/style.css',(req,res)=>{
     res.sendFile(__dirname+'/style.css');
 });
-
+app.get('/indexUI.js',(req,res)=>{
+    res.sendFile(__dirname+'/indexUI.js');
+});
 
 app.post('/login.html?',(req,res)=>{
 
@@ -113,7 +116,6 @@ app.post('/login.html?',(req,res)=>{
 });
 app.get('/index.html:id',(req,res)=>{
     res.sendFile(__dirname+'/index.html',{'name':"satou"});
-
 });
 
 app.get('/',(req,res)=>{
@@ -126,96 +128,155 @@ app.get('/socket.js',(req,res)=>{
 http.listen(port,()=>{
     console.log(`listening on *:${port}`);
 });
-let room=[];
+
+
+
 rooms=[];
 io.on('connection',(socket)=>{//個別にsocketが作られる。ページがリロードされるたびにsocketidは変わるのかも
     
     names=[];
     msgs=[];
     
+    // urlのパラメータから誰がログインしているのか取得。
     console.log('a user connected');
     let url_name=socket.handshake.headers.referer;
     url_name=url_name.split("html");
     names[socket.id] =url_name[1];
-
-    socket.on('insertUser',(name)=>{
-    //自分をログインテーブルに追加
-    MongoClient.connect(url,(error,client)=>{
-        var db = client.db("heroku_v52vjggz");
-        db.collection("signin",(error,collection)=>{//コレクションはテーブルと同じ
-            collection.insertOne(
-                {id: name}
-            ),(error,result)=>{
-                client.close();
-            };
-        });
-    });
-
-    //ログイン中のユーザー一覧を取得
-    let users=[];
-    MongoClient.connect(url,(error,client)=>{
-        var db = client.db("heroku_v52vjggz");
-        db.collection("signin",(error,collection)=>{//コレクションはテーブルと同じ
-            collection.find().toArray((error,docs)=>{
-                for(let doc of docs){
-                    users.push(doc.id);
-                    // console.log(users);
-
-                }
-        console.log(users);
-        // 自分自身を含む全員に送信。ここは同期処理のようなのでここでemitしておく。
-        io.sockets.emit('insertUser',users);
-        });
-        });
-        client.close();
-    });
-
-    });
     
-    socket.on('join room',(msg)=>{
-        rooms[socket.id]=msg;
-        socket.join(msg);
-        console.log(socket.id+"さんが"+rooms[socket.id]+"に入室します。");
-        console.log(rooms);
+    
+    // 自分をログインテーブルに追加
+    socket.on('insertUser',(name)=>{
+    console.log("ログインするユーザー"+name);
+    
 
-    });
-    // socket.broadcast.to(rooms[socket.id]).emit('message','誰かが入室しました');
 
-    socket.on('disconnect',()=>{
+    function userSignin(){
+        return new Promise((resolve, reject)=>{
+            let i;
+            MongoClient.connect(url,(error,client)=>{
+                var db = client.db("heroku_v52vjggz");
+                    db.collection("signin",(error,collection)=>{//コレクションはテーブルと同じ
+                    i=collection.insertOne(
+                        {id: name}
+                        
+                    ),(error,result)=>{     
+                        client.close(); 
+                        
+                    };
+                    });
+                    console.log(Boolean(i));// true　
+                    if(Boolean(i)){// 本来この引数はＤＢへの登録が終わったらtrueになる。new promise以降が同期処理のようになってる。
+                        resolve(i);
+                    }else{
+                        reject(i);
+                    }
+            });  //db接続終わり
 
-        console.log('dbからログイン情報を削除します。'+url_name[1]);
-        MongoClient.connect(url,(error,client)=>{
-            var db = client.db("heroku_v52vjggz");
-            db.collection("signin",(error,collection)=>{//コレクションはテーブルと同じ
-                collection.deleteMany(
-                    {id: url_name[1]}
-                )
-                
-        });
-        });
-        // ログイン後の情報を全ユーザーに送る
+        });// usesignin()終わり
+    };// connection 終わり
+
+    var promise=[];
+    promise = userSignin();
+
+    promise.then((value) => { //resolveが返って来るまで待つみたい。
+        console.log(Boolean(value));
         let users=[];
         MongoClient.connect(url,(error,client)=>{
             var db = client.db("heroku_v52vjggz");
             db.collection("signin",(error,collection)=>{//コレクションはテーブルと同じ
                 collection.find().toArray((error,docs)=>{
+
+                    console.log("現在のログインユーザー数:"+docs.length);
+
                     for(let doc of docs){
                         users.push(doc.id);
-                        // console.log(users);
-    
                     }
-            console.log(users);
+            console.log("ログイン後のユーザー"+users);
             // 自分自身を含む全員に送信。ここは同期処理のようなのでここでemitしておく。
             io.sockets.emit('insertUser',users);
             });
             });
             client.close();
-        });
+        });   
 
-        console.log('user disconnected');
-        let name="誰か";
-        if(names[socket.id]){name=names[socket.id];}
-        socket.broadcast.to(rooms[socket.id]).emit('message',name+'が接続を切断しました。');
+    }, (error) => {
+        console.error("error:", error.message);
+    });
+     
+
+
+
+    //ログイン中のユーザー一覧を取得
+
+
+    });// insertUser終わり
+    
+    socket.on('join room',(msg)=>{
+        rooms[socket.id]=msg;
+        socket.join(msg);
+        console.log(socket.id+"さんが"+rooms[socket.id]+"に入室します。");
+        for(var key in rooms) {
+              var val = rooms[key];
+              console.log("key=", key, ", value=", val);
+          }
+    });
+    // socket.broadcast.to(rooms[socket.id]).emit('message','誰かが入室しました');
+
+    socket.on('disconnect',()=>{
+        
+        function userSignOut(){
+            return new Promise((resolve, reject)=>{
+                let i2;
+                console.log('dbからログイン情報を削除します。'+url_name[1]);
+                MongoClient.connect(url,(error,client)=>{
+                    var db = client.db("heroku_v52vjggz");
+                        db.collection("signin",(error,collection)=>{//コレクションはテーブルと同じ
+                        i2=collection.deleteMany(
+                            {id: url_name[1]}
+                        )
+                    });                      
+                    console.log(Boolean(i2));
+                    if(Boolean(i2)){
+                        resolve(i2);
+                    }else{
+                        reject(i2);
+                    }
+
+                }); // db接続終わり
+            });  // return promise終わり
+        }// userSignOut()　終わり
+
+        var promise2=[];
+        promise2 = userSignOut();
+
+
+        promise2.then((value) => {
+            console.log(Boolean(value));
+            // ログアウト後の情報を全ユーザーに送る
+            let users=[];
+            MongoClient.connect(url,(error,client)=>{
+                var db = client.db("heroku_v52vjggz");
+                db.collection("signin",(error,collection)=>{
+                    collection.find().toArray((error,docs)=>{
+                        for(let doc of docs){
+                            users.push(doc.id);
+                        }
+                    console.log("ログアウト後のユーザ一覧"+users);
+
+                    // 自分自身を含む全員に送信。ここは同期処理のようなのでここでemitしておく。
+                    io.sockets.emit('insertUser',users);
+                });
+                });
+                client.close();
+            });
+                console.log('user disconnected');
+                let name="誰か";
+                if(names[socket.id]){name=names[socket.id];}
+                socket.broadcast.to(rooms[socket.id]).emit('message',name+'が接続を切断しました。');
+            },(error) => {
+                console.error("error!!:"+error);
+            });
+
     });
 
 
