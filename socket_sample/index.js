@@ -124,12 +124,21 @@ app.get('/',(req,res)=>{
 app.get('/socket.js',(req,res)=>{
     res.sendFile(__dirname+'/socket.js');
 });
-
+app.get('/jquery-2.1.3.js',(req,res)=>{
+    res.sendFile(__dirname+'/jquery-2.1.3.js');
+});
+app.get('/jquery-ui.js',(req,res)=>{
+    res.sendFile(__dirname+'/jquery-ui.js');
+});
+app.get('/jquery-ui.css',(req,res)=>{
+    res.sendFile(__dirname+'/jquery-ui.css');
+});
+app.get('/page02.html',(req,res)=>{
+    res.sendFile(__dirname+'/page02.html');
+});
 http.listen(port,()=>{
     console.log(`listening on *:${port}`);
 });
-
-
 
 rooms=[];
 io.on('connection',(socket)=>{//個別にsocketが作られる。ページがリロードされるたびにsocketidは変わるのかも

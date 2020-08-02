@@ -7,7 +7,9 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="socket.js"></script>
     <script src="indexUI.js"></script>
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <link href="jquery-ui.css" rel="stylesheet">
+    <script type="text/javascript" src="jquery-2.1.3.js"></script>
+    <script type="text/javascript" src="jquery-ui.js"></script>
     <link rel="stylesheet" type="text/css" href="./style.css">
   </head>
 
@@ -39,8 +41,23 @@
     <a href="./login.html">ログイン画面へ戻る</a>
 
 </main>
-<!-- サイドメニュー -->
-<nav class="menu">
+<!-- jQuery UI -->
+<div id="tabs">
+  <ul>
+    <li><a title="content" href="page02.html">中</a></li>
+  </ul>
+  <div id="content"></div>
+</div>
+
+
+<!-- レフトメニュー -->
+
+    
+
+<!-- ミドルメニュー -->
+
+  <!-- <div id="tabs-2> -->
+  <nav class="menu">
 
   <h4>-ログイン中-</h4>
   <ul id="login_user">
@@ -49,7 +66,9 @@
   <h4>-user一覧-</h4>
   <ul id="user_list">
   </ul>
+  <!-- </div> -->
 
+</div><!--tabs終わり-->
 
 </nav>
 </body>
