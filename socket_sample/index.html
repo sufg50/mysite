@@ -43,6 +43,8 @@
   <p>-user一覧-</p>
     <ul id="RoomCreate_userList">
       </ul>
+  <p>グループ名<input type="text" id="commitGroupName"></input></p>
+  
   <p id="createRoom">選択userで<br>グループの作成</p>
   </nav>
 <!-- メインメニュー -->
@@ -178,7 +180,21 @@ $(function () {
     $('#co').submit(function(e) {
       let coStatus;
       coStatus=$(this).hasClass("co-1on1");
-      if(coStatus){// １対１チャット
+      coStatusGroup=$(this).hasClass("co-group");
+
+      if(coStatusGroup){
+        e.preventDefault(); // prevents page reloading
+          var str = document.getElementById("comment").value;
+          if(str!=""){
+              //サーバーへメッセージを送る
+              let roomName=$("#roomTitle").text();
+              send_group_message(roomName,str);
+          }
+          //空にする
+          $('#comment').val('');
+          return false;
+
+      }else if(coStatus){// １対１チャット
           e.preventDefault(); // prevents page reloading
           var str = document.getElementById("comment").value;
           if(str!=""){

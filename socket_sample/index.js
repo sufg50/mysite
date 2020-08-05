@@ -395,10 +395,38 @@ io.on('connection',(socket)=>{//個別にsocketが作られる。ページがリ
         one.message(MongoClient,url,names,socket.id,io,toUser,msg);
     });
     //グループチャット
-    socket.on('createRoom',(roomUsers)=>{
+    socket.on('createRoom',(roomUsers,roomName)=>{
         console.log("グループチャット");
-        group.enter(MongoClient,url,names,socket.id,io,roomUsers);
+        group.enter(MongoClient,url,names,socket.id,io,roomUsers,roomName);
 
     });
+    socket.on('group_message',(roomName,msg)=>{
+        console.log("グループチャットメッセージ");
+        group.message(MongoClient,url,names,socket.id,io,roomName,msg);
+    });
+    socket.on('getRooms',()=>{
+        
+        let rooms=[];
 
+        MongoClient.connect(url,(error,client)=>{
+            var db = client.db("heroku_v52vjggz");
+            db.collection("group_tolkContents",(error,collection)=>{//コレクションはテーブルと同じ
+                collection.find().toArray((error,docs)=>{
+                    for(let doc of docs){
+                        rooms.push(doc.roomName);
+                        console.log(rooms);
+
+                    }
+            // socket.emitだと自分自身にしか送れなかった。ここは同期処理のようなのでここでemitしておく。
+            io.sockets.emit('getRooms',rooms);
+
+
+            });
+            });
+            client.close();
+        });
+        
+        //非同期なので、ここでemitするとＤＢの内容取得ができないでemitしてしまう。
+        
+    });
 });

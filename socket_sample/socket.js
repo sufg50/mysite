@@ -24,11 +24,31 @@ function send_1on1_message(toUser,message){
     socket.emit("1on1_message",toUser,message);
 
 }
-function setdCreateRoom(roomUsers){
-    socket.emit("createRoom",roomUsers)
+function setdCreateRoom(roomUsers,roomName){
+    socket.emit("createRoom",roomUsers,roomName)
 
 }
+function send_group_message(roomName,msg){
+    socket.emit("group_message",roomName,msg);
+}
 
+socket.on("send_group_message",(msg)=>{
+    $("#commentArea").empty();
+    let url_name=location.href ;
+    url_name=url_name.split("html");
+    for (let key in msg) {
+        console.log("内容："+msg[key].contents+"。"+msg[key].toUser+"へ。"+msg[key].fromUser+"から。");
+        console.log(url_name[1]);
+        if(msg[key].fromUser==url_name[1]){
+            var dom = $('<li style="text-align:right">'+msg[key].contents+'</li>');
+            $("#commentArea").append(dom);
+        }else{
+            var dom = $('<li>'+msg[key].contents+'</li>');
+            $("#commentArea").append(dom);
+        }
+
+    }
+});
 
 socket.on('1on1_tolkContents',(msg)=>{
     $("#commentArea").empty();
@@ -63,6 +83,15 @@ socket.on('group_tolkContents',(msg)=>{
         }
 
     }
+    socket.emit("getRooms");
+
+});
+socket.on("getRooms",(rooms)=>{
+    $("#room_list").empty();
+    rooms.forEach(room => {
+        var dom = $('<li>'+room+'</li>');
+        $("#room_list").append(dom);
+    });
 });
 
 //サーバーからの通信を受け取る
@@ -73,6 +102,8 @@ socket.on('message',(msg)=>{
 
 socket.on('getUser',(users)=>{
     $("#user_list").empty();
+    $("#RoomCreate_userList").empty();
+
 
     users.forEach(user => {
         var dom = $('<li>☆'+user+'</li>');
