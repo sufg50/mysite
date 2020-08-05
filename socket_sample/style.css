@@ -1,34 +1,148 @@
-main {
-    display: block;  /* for IE */
-    margin-left: 150px;
+html body{
+    font-size: 0px;
+    padding: 0px;
+    margin: 0px;
+    display: block;
+    background: lightgray;
+
+}
+.wrapper{
+    font-size: 0px; /* display: inline-block で出来る上下の隙間へ対処 */
+    padding: 0px;
+    margin: 0px;
+    display: block;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    background: whitesmoke;
+
+}
+.main {
+    display: inline-block;
+    margin:0 auto;
+    font-size: 15px;
+    top: 0px;
+    height: 100vh;
+    padding: 0px;
+    margin: 0px;
+    background: whitesmoke;
   }
-  
-.menu {
-position: fixed;
+
+.main_1on1{
+    display: none;
+    width: 500px;
+    height: 100vh;
+    text-align: center;
+    font-size: 24px;
+    line-height: 1.2em;
+
+}
+.main_1on1 p{
+    
+    display: block;
+    width: 90px;
+    height: 30px;
+    margin: auto;
+    border-style: solid;
+    border-radius: 5px;
+    border-color:lightblue;
+    background-color: rgb(87, 180, 223);
+    color: ghostwhite;
+}
+
+.left{
+text-align:left;
+display: inline-block;
+vertical-align: top;
 top: 0px;
-left: 0px;
+font-size: 15px;
+width: 80px;
+height: 100vh;
+padding: 0px;
+margin: 0px;
+color: white;
+background: rgb(59, 59, 87);
+}
+.left ul{
+    padding: 15px;
+    margin: 0px;
+}
+
+.middle_top {
+display: inline-block;
+vertical-align: top;
+font-size: 15px;
+top: 0px;
 width: 150px;
 height: 100vh;
+
 background: lightgray;
 /* スクロールバーを表示 */
 overflow-y: scroll;
 overflow-x: scroll;
 /* IE などのスクロールバーの色設定 */
 scrollbar-face-color: #999;
-scrollbar-track-color: #eee;
+scrollbar-track-color:  whitesmoke;
+-ms-overflow-style: none;    /* IE, Edge 対応 */
+scrollbar-width: none;       /* Firefox 対応 */
+padding: 0px;
+margin: 0px;
 }
+.middle_top p{
+    display: none;
+    
+    
+}
+#createRoom{
+    border-style: solid;
+    background-color: rgb(199, 214, 177);
+    position:bottom;
+    cursor : pointer;
+    text-align: center;
 
-ul {
+}
+#RoomCreate_userList{
+    display: none;
+    padding: 0px;
+}
+#createRoom:hover {
+    background-color: rgb(207, 219, 189);
+}
+.middle_tolkRoom {
+    display: inline-block;
+    vertical-align: top;
+    font-size: 15px;
+    top: 0px;
+    width: 150px;
+    height: 100vh;
+    
+    background: lightgray;
+    /* スクロールバーを表示 */
+    overflow-y: scroll;
+    overflow-x: scroll;
+    /* IE などのスクロールバーの色設定 */
+    scrollbar-face-color: #999;
+    scrollbar-track-color:  whitesmoke;
+    -ms-overflow-style: none;    /* IE, Edge 対応 */
+    scrollbar-width: none;       /* Firefox 対応 */
+    padding: 0px;
+    margin: 0px;
+    }
+
+ul li{
     list-style: none;
+    
 }
 
 #commentArea{
-    padding: 0px;
+
     display: block;
-    width: 800px;
+    padding: 10px;
+    top: 0px;
+    width: 600px;
     height: 200px;
     overflow-y: scroll;
-    background-color: lightyellow;
+    background-color: rgb(241, 241, 238);
 }
 #user_list{
     padding: 10px;
@@ -38,9 +152,8 @@ ul {
     padding: 10px;
     display: block;
 }
-
-#signin{
-    display: block;
-
-
+.left-hover{
+    cursor : pointer;
+    background-color: grey;
 }
+

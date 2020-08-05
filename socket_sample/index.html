@@ -6,32 +6,64 @@
     <!-- 読み込み順序逆かも -->
     <script src="/socket.io/socket.io.js"></script>
     <script src="socket.js"></script>
-    <script src="indexUI.js"></script>
     <link href="jquery-ui.css" rel="stylesheet">
     <script type="text/javascript" src="jquery-2.1.3.js"></script>
+    <script src="sceneManeger.js"></script>
+    <script src="index_1on1.js"></script>
+
     <script type="text/javascript" src="jquery-ui.js"></script>
+
     <link rel="stylesheet" type="text/css" href="./style.css">
   </head>
 
 <body>
-    
-<main>
+<div class="wrapper">
+<!-- レフトメニュー -->
+<div class="left">
+  <ul class="left-menu">
+  <li id="leftTop"><p>トップ</p></li>
+  <li id="leftRoom"><p>ルーム</p></li>
+  </ul>
+</div>
+  
+<!-- ミドルメニュー -->
+  <!-- トップメージ -->
+  <nav class="middle_top">
+  <h4>-ログイン中-</h4>
+  <ul id="login_user">
+  </ul>
+  
+  <h4>-user一覧-</h4>
+  <ul id="user_list">
+  </ul>
+  <!-- ルーム -->
+  <p>-ルーム一覧-</p>
+  <ul id="room_list">
+    </ul>
+  <p>-user一覧-</p>
+    <ul id="RoomCreate_userList">
+      </ul>
+  <p id="createRoom">選択userで<br>グループの作成</p>
+  </nav>
+<!-- メインメニュー -->
+<div class="main">
+  <!-- メイントップ -->
+  <div class="main_top">
     <h1 id="roomTitle">Socket.js Hello, world!2</h1>
-
     <ul id="commentArea"></ul>
     <p id="whoTyping"></p>
 
-    <!-- トークルームの設定 -->
+    <!-- チャンネルの設定 -->
     <form id="room">
       <input type=text value="" id="roomName">
       <button type="submit"  >ここにチャンネル名を入れてください。</button><br>
     </form>
 
     <!-- ニックネームの登録 -->
-    <form id="nic">
+    <!-- <form id="nic">
       <input type=text value="" id="nicName">
       <button type="submit"  >ここにニックネームを入力してください。(任意)</button><br>
-    </form>
+    </form> -->
     <!-- コメント送信 -->
     <form id="co">
       <input type=text value="" id="comment" onInput="alertValue(this)" >
@@ -40,59 +72,62 @@
     <br>
     <a href="./login.html">ログイン画面へ戻る</a>
 
-</main>
-<!-- jQuery UI -->
-<div id="tabs">
-  <ul>
-    <li><a title="content" href="page02.html">中</a></li>
-  </ul>
-  <div id="content"></div>
+  </div>
+  <!-- メイン1on1チャット -->
+  <div class="main_1on1">
+
+  </div>
+
 </div>
 
 
-<!-- レフトメニュー -->
-
-    
-
-<!-- ミドルメニュー -->
-
-  <!-- <div id="tabs-2> -->
-  <nav class="menu">
-
-  <h4>-ログイン中-</h4>
-  <ul id="login_user">
-  </ul>
-
-  <h4>-user一覧-</h4>
-  <ul id="user_list">
-  </ul>
-  <!-- </div> -->
-
-</div><!--tabs終わり-->
-
-</nav>
+</div><!--wrapper-->
 </body>
 
 
 
 <script>
   $(function () {  //読み込み時
+  // デザイン関連
+    $('.left-menu li p').hover(function(){
+        $("*").removeClass("left-hover");
+        $(this).addClass("left-hover");
+      },
+    function () {
+      $("*").removeClass("left-hover");
+    });
+
+  $("#user_list").on({
+      "mouseenter": function(){$(this).addClass("left-hover");},
+      "mouseleave": function(){$("*").removeClass("left-hover");}
+  }, "li");
+  $("#login_user").on({
+      "mouseenter": function(){$(this).addClass("left-hover");},
+      "mouseleave": function(){$("*").removeClass("left-hover");}
+  }, "li");
+  $(".main_1on1").on({
+      "mouseenter": function(){$(this).addClass("left-hover");},
+      "mouseleave": function(){$("*").removeClass("left-hover");}
+  }, "#1on1_Enter");
 
   //ＤＢからユーザー一覧を取得
   socket.emit('getUser',);
 
   // ログイン中のユーザーテーブルから情報を取ってくる。expressのreq.params.idを使う
-  name=location.href.split("index.html")[1];
+  let name=location.href.split("index.html")[1];
   socket.emit('insertUser',name);
 
-  });// 読み込み時終わり
-
-
-  
+ 
   // idをニックネームとして使う。
   socket.emit('chat message',name);
-        var dom = $('<li style="margin-left:200px;">'+"私が入室しました"+'</li>');
-        $("#commentArea").append(dom);
+  var dom = $('<li style="margin-left:200px;">'+"私が入室しました"+'</li>');
+  $("#commentArea").append(dom);
+  
+});// 読み込み時終わり
+
+
+
+
   
 
   // 誰かが入力中の時    
@@ -104,7 +139,7 @@
 
 $(function () {
 
-
+//　トップページ
   $('#room').submit(function(e) {
       console.log("roomNameファンクション");
       e.preventDefault(); // ページのリロードを防いで、socket.idが変更されないようにもしておく
@@ -141,25 +176,42 @@ $(function () {
     });
 
     $('#co').submit(function(e) {
-      console.log("コメントファンクション");
-      e.preventDefault(); // prevents page reloading
-      var str = document.getElementById("comment").value;
-      if(str!="" && str2!=str){
+      let coStatus;
+      coStatus=$(this).hasClass("co-1on1");
+      if(coStatus){// １対１チャット
+          e.preventDefault(); // prevents page reloading
+          var str = document.getElementById("comment").value;
+          if(str!=""){
+              //サーバーへメッセージを送る
+              let toUser=$("#roomTitle").text();
+              send_1on1_message(toUser,str);
+          }
+          //空にする
+          $('#comment').val('');
+          return false;
+      }else{// トップページ
+          console.log("コメントファンクション");
+          e.preventDefault(); // prevents page reloading
+          var str = document.getElementById("comment").value;
+          if(str!="" && str2!=str){
 
-          //自分のコメントエリアに追加する。
-          var dom = $('<li style="margin-left:200px;">'+str+'</li>');
-          $("#commentArea").append(dom);
+              //自分のコメントエリアに追加する。
+              var dom = $('<li style="margin-left:200px;">'+str+'</li>');
+              $("#commentArea").append(dom);
+              str2=str;
+              //サーバーへメッセージを送る
+              send(str);
+          }
           str2=str;
-          //サーバーへメッセージを送る
-          send(str);
-      }
-      str2=str;
-    
-      //空にする
-      $('#comment').val('');
-      return false;
-    });
+        
+          //空にする
+          $('#comment').val('');
+          return false;        
+        }
 
+    });
+  
+  // ルーム個人間チャット
 
   });
 </script>

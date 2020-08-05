@@ -17,6 +17,54 @@ function sendEnterRoom(message){
     socket.emit('join room',message);
 }
 
+function send_1on1(ToName,message){
+    socket.emit('1on1_tolkContents',ToName,message);//「トークする」がクリックされたとき
+}
+function send_1on1_message(toUser,message){
+    socket.emit("1on1_message",toUser,message);
+
+}
+function setdCreateRoom(roomUsers){
+    socket.emit("createRoom",roomUsers)
+
+}
+
+
+socket.on('1on1_tolkContents',(msg)=>{
+    $("#commentArea").empty();
+    let url_name=location.href ;
+    url_name=url_name.split("html");
+    for (let key in msg) {
+        console.log("内容："+msg[key].contents+"。"+msg[key].toUser+"へ。"+msg[key].fromUser+"から。");
+        console.log(url_name[1]);
+        if(msg[key].fromUser==url_name[1]){
+            var dom = $('<li style="text-align:right">'+msg[key].contents+'</li>');
+            $("#commentArea").append(dom);
+        }else{
+            var dom = $('<li>'+msg[key].contents+'</li>');
+            $("#commentArea").append(dom);
+        }
+
+    }
+
+});
+socket.on('group_tolkContents',(msg)=>{
+    $("#commentArea").empty();
+    let url_name=location.href ;
+    url_name=url_name.split("html");
+    for (let key in msg) {
+        console.log("内容："+msg[key].user+"。"+msg[key].contents);
+        if(msg[key].fromUser==url_name[1]){
+            var dom = $('<li style="text-align:right">'+msg[key].contents+'</li>');
+            $("#commentArea").append(dom);
+        }else{
+            var dom = $('<li>'+msg[key].contents+'</li>');
+            $("#commentArea").append(dom);
+        }
+
+    }
+});
+
 //サーバーからの通信を受け取る
 socket.on('message',(msg)=>{
     var dom = $('<li>'+msg+'</li>');
@@ -30,6 +78,11 @@ socket.on('getUser',(users)=>{
         var dom = $('<li>☆'+user+'</li>');
         $("#user_list").append(dom);
     });
+    users.forEach(user => {
+        var dom = $('<li><input type="checkbox"/ name="hoge" value='+user+">"+user+'</li>');
+        $("#RoomCreate_userList").append(dom);
+    });
+
 
 });
 
@@ -43,6 +96,7 @@ socket.on('insertUser',(users)=>{
     });
 
 });
+
 //誰が入力中？
 socket.on('message 2',(msg)=>{
     // $("#whoTyping").remove();
@@ -53,6 +107,8 @@ socket.on('message 2',(msg)=>{
         elem.innerHTML = "";
     }, 3000);
 });
+
+
 
 //サーバーからの通信を受け取る
 socket.on('disconnect',(msg)=>{

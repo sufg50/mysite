@@ -13,6 +13,9 @@ app.use(bodyParser.urlencoded({
 // mongodb://localhost:27017/
 // mongodb://heroku_v52vjggz:gjdrohmubrprcpjm81svdl2aq9@ds131432.mlab.com:31432/heroku_v52vjggz
 app.use(bodyParser.json());
+var Person = require('./index_1on1');
+var Group = require('./index_group');
+
 
 var io =require('socket.io')(http);//トップレベルドメイン。サーバーの中でsocket.ioを動かすイメージ
 
@@ -27,17 +30,31 @@ app.post('/register?',(req,res)=>{
     // console.log(req.body.id);
     // console.log(req.body.password);
 
-    // テーブルを作成しておく。作成済みでも大丈夫みたい
+    // サインイン中のユーザーテーブルを作成しておく。作成済みでも大丈夫みたい
     MongoClient.connect(url,(error,client)=>{
         var db = client.db("heroku_v52vjggz");
         db.createCollection("signin",(error,collection)=>{//コレクションはテーブルと同じ
             
     });
     });
-    // テーブルを作成しておく。
+    // 登録済みのユーザー一覧テーブルを作成しておく。
     MongoClient.connect(url,(error,client)=>{
         var db = client.db("heroku_v52vjggz");
         db.createCollection("products",(error,collection)=>{//コレクションはテーブルと同じ
+            
+    });
+    });
+    //　個人間チャットのテーブルを作る。
+    MongoClient.connect(url,(error,client)=>{
+        var db = client.db("heroku_v52vjggz");
+        db.createCollection("1on1_tolkContents",(error,collection)=>{//コレクションはテーブルと同じ
+            
+    });
+    });
+    //　グループチャットのテーブルを作る。
+    MongoClient.connect(url,(error,client)=>{
+        var db = client.db("heroku_v52vjggz");
+        db.createCollection("group_tolkContents",(error,collection)=>{//コレクションはテーブルと同じ
             
     });
     });
@@ -136,21 +153,38 @@ app.get('/jquery-ui.css',(req,res)=>{
 app.get('/page02.html',(req,res)=>{
     res.sendFile(__dirname+'/page02.html');
 });
+app.get('/sceneManeger.js',(req,res)=>{
+    res.sendFile(__dirname+'/sceneManeger.js');
+});
+app.get('/index_1on1.js',(req,res)=>{
+    res.sendFile(__dirname+'/index_1on1.js');
+});
+app.get('/index_group.js',(req,res)=>{
+    res.sendFile(__dirname+'/index_group.js');
+});
 http.listen(port,()=>{
     console.log(`listening on *:${port}`);
 });
 
 rooms=[];
+names=[];
 io.on('connection',(socket)=>{//個別にsocketが作られる。ページがリロードされるたびにsocketidは変わるのかも
     
-    names=[];
+    
     msgs=[];
+    let one = new Person();
+    let group= new Group();
+     
     
     // urlのパラメータから誰がログインしているのか取得。
     console.log('a user connected');
     let url_name=socket.handshake.headers.referer;
     url_name=url_name.split("html");
+    console.log("ＵＲＬネームは？"+url_name[1]);
     names[socket.id] =url_name[1];
+    console.log("ログインユーザのsocket:id:"+socket.id);
+    console.log(names);
+
     
     
     // 自分をログインテーブルに追加
@@ -166,11 +200,9 @@ io.on('connection',(socket)=>{//個別にsocketが作られる。ページがリ
                 var db = client.db("heroku_v52vjggz");
                     db.collection("signin",(error,collection)=>{//コレクションはテーブルと同じ
                     i=collection.insertOne(
-                        {id: name}
-                        
+                        {id: name,socket_ID: socket.id}
                     ),(error,result)=>{     
                         client.close(); 
-                        
                     };
                     });
                     console.log(Boolean(i));// true　
@@ -232,6 +264,8 @@ io.on('connection',(socket)=>{//個別にsocketが作られる。ページがリ
     // socket.broadcast.to(rooms[socket.id]).emit('message','誰かが入室しました');
 
     socket.on('disconnect',()=>{
+        // socket.idを削除する。
+        delete names[socket.id];
         
         function userSignOut(){
             return new Promise((resolve, reject)=>{
@@ -288,16 +322,13 @@ io.on('connection',(socket)=>{//個別にsocketが作られる。ページがリ
 
     });
 
-
-
-    
     socket.on('message',(msg)=>{
         console.log("今送ったメッセージ:"+msg);
         console.log("前送ったメッセージ:"+msgs[names[socket.id]]);
         if(!(names[socket.id])){//チャンネル名を指定しないとundefindになってしまう。
             names[socket.id]=url_name[1];    
         }
-        console.log("送り主:"+names[socket.id]);
+        console.log("送り主:"+names[socket.id]+"ソケットＩＤ:"+socket.id);
         if(msg == msgs[names[socket.id]] ){
             console.log("二重投稿です。他の人にメッセージを送りません。");
         }else{
@@ -349,13 +380,25 @@ io.on('connection',(socket)=>{//個別にsocketが作られる。ページがリ
             });
             });
             client.close();
-            // console.log(users);
-            // console.log("数は：");
-            // console.log(users.length);
         });
         
         //非同期なので、ここでemitするとＤＢの内容取得ができないでemitしてしまう。
         
+    });
+
+    //個人間チャット
+    socket.on('1on1_tolkContents',(toName,msg)=>{
+        one.enter(MongoClient,url,names,toName,msg,socket.id,io);
+    });
+    socket.on('1on1_message',(toUser,msg)=>{
+        
+        one.message(MongoClient,url,names,socket.id,io,toUser,msg);
+    });
+    //グループチャット
+    socket.on('createRoom',(roomUsers)=>{
+        console.log("グループチャット");
+        group.enter(MongoClient,url,names,socket.id,io,roomUsers);
+
     });
 
 });
