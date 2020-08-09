@@ -105,7 +105,7 @@ margin: 0px;
     display: none;
     padding: 0px;
 }
-#createRoom:hover {
+#createRoom:hover  {
     background-color: rgb(207, 219, 189);
 }
 .middle_tolkRoom {
@@ -153,6 +153,10 @@ ul li{
     display: block;
 }
 .left-hover{
+    cursor : pointer;
+    background-color: grey;
+}
+#room_list li:hover{
     cursor : pointer;
     background-color: grey;
 }

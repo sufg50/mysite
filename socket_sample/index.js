@@ -402,7 +402,7 @@ io.on('connection',(socket)=>{//個別にsocketが作られる。ページがリ
     });
     socket.on('group_message',(roomName,msg)=>{
         console.log("グループチャットメッセージ");
-        group.message(MongoClient,url,names,socket.id,io,roomName,msg);
+        group.message(MongoClient,url,names,socket.id,io,roomName,msg,rooms,socket);
     });
     socket.on('getRooms',()=>{
         
@@ -411,14 +411,16 @@ io.on('connection',(socket)=>{//個別にsocketが作られる。ページがリ
         MongoClient.connect(url,(error,client)=>{
             var db = client.db("heroku_v52vjggz");
             db.collection("group_tolkContents",(error,collection)=>{//コレクションはテーブルと同じ
-                collection.find().toArray((error,docs)=>{
+                collection.find({$and:[{user: { $eq: names[socket.id]}},{contents: { $eq: "" }}] }).toArray((error,docs)=>{
+                    console.log("ルーム数は？"+docs.length);
                     for(let doc of docs){
+                        console.log(doc.roomName);
                         rooms.push(doc.roomName);
                         console.log(rooms);
 
                     }
             // socket.emitだと自分自身にしか送れなかった。ここは同期処理のようなのでここでemitしておく。
-            io.sockets.emit('getRooms',rooms);
+            socket.emit('getRooms',rooms);
 
 
             });

@@ -182,7 +182,7 @@ $(function () {
       coStatus=$(this).hasClass("co-1on1");
       coStatusGroup=$(this).hasClass("co-group");
 
-      if(coStatusGroup){
+      if(coStatusGroup){// グループチャットのとき
         e.preventDefault(); // prevents page reloading
           var str = document.getElementById("comment").value;
           if(str!=""){
