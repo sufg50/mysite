@@ -29,76 +29,82 @@ app.post('/register?',(req,res)=>{
     // // パラメータ名、idを出力 
     // console.log(req.body.id);
     // console.log(req.body.password);
-
-    // サインイン中のユーザーテーブルを作成しておく。作成済みでも大丈夫みたい
-    MongoClient.connect(url,(error,client)=>{
-        var db = client.db("heroku_v52vjggz");
-        db.createCollection("signin",(error,collection)=>{//コレクションはテーブルと同じ
-            
-    });
-    });
-    // 登録済みのユーザー一覧テーブルを作成しておく。
-    MongoClient.connect(url,(error,client)=>{
-        var db = client.db("heroku_v52vjggz");
-        db.createCollection("products",(error,collection)=>{//コレクションはテーブルと同じ
-            
-    });
-    });
-    //　個人間チャットのテーブルを作る。
-    MongoClient.connect(url,(error,client)=>{
-        var db = client.db("heroku_v52vjggz");
-        db.createCollection("1on1_tolkContents",(error,collection)=>{//コレクションはテーブルと同じ
-            
-    });
-    });
-    //　グループチャットのテーブルを作る。
-    MongoClient.connect(url,(error,client)=>{
-        var db = client.db("heroku_v52vjggz");
-        db.createCollection("group_tolkContents",(error,collection)=>{//コレクションはテーブルと同じ
-            
-    });
-    });
-
-    // データベースへ登録する
-    MongoClient.connect(url,(error,client)=>{
-        var db = client.db("heroku_v52vjggz");
-        db.collection("products",(error,collection)=>{//コレクションはテーブルと同じ
-            
-            collection.insertOne(
-                {id: req.body.id,password: req.body.password}
+    let id = req.body.id;
+    if(!(id.match(/^[A-Za-z0-9]*$/))){
+        res.send("ユーザー名は半角英数字で入力してください。");
+    }else{
+        // サインイン中のユーザーテーブルを作成しておく。作成済みでも大丈夫みたい
+        MongoClient.connect(url,(error,client)=>{
+            var db = client.db("heroku_v52vjggz");
+            db.createCollection("signin",(error,collection)=>{//コレクションはテーブルと同じ
                 
-            ),(error,result)=>{
-                client.close();
-            };
-
-
         });
-    });
+        });
+        // 登録済みのユーザー一覧テーブルを作成しておく。
+        MongoClient.connect(url,(error,client)=>{
+            var db = client.db("heroku_v52vjggz");
+            db.createCollection("products",(error,collection)=>{//コレクションはテーブルと同じ
+                
+        });
+        });
+        //　個人間チャットのテーブルを作る。
+        MongoClient.connect(url,(error,client)=>{
+            var db = client.db("heroku_v52vjggz");
+            db.createCollection("1on1_tolkContents",(error,collection)=>{//コレクションはテーブルと同じ
+                
+        });
+        });
+        //　グループチャットのテーブルを作る。
+        MongoClient.connect(url,(error,client)=>{
+            var db = client.db("heroku_v52vjggz");
+            db.createCollection("group_tolkContents",(error,collection)=>{//コレクションはテーブルと同じ
+                
+        });
+        });
 
-    //ログイン可能なユーザーをtxtに書き込む
-    MongoClient.connect(url,(error,client)=>{
-        var db = client.db("heroku_v52vjggz");
-        db.collection("products",(error,collection)=>{//コレクションはテーブルと同じ
-            collection.find().toArray((error,docs)=>{
-                const stream = fs.createWriteStream("user.txt");
-                for(let doc of docs){        
-                    // console.log("型:"+typeof(doc.id));
-                    stream.write(doc.id+"\n");
-                   
-                    // エラー処理
-                    stream.on("error", (err)=>{
-                        if(err)
-                        console.log(err.message);
-                    });
-                } 
-                stream.end("\n");
-            
+        // データベースへ登録する
+        MongoClient.connect(url,(error,client)=>{
+            var db = client.db("heroku_v52vjggz");
+            db.collection("products",(error,collection)=>{//コレクションはテーブルと同じ
+                
+                collection.insertOne(
+                    {id: req.body.id,password: req.body.password}
+                    
+                ),(error,result)=>{
+                    client.close();
+                };
+
+
             });
-            client.close();
         });
-    });
 
-    res.redirect('./login.html');
+        //ログイン可能なユーザーをtxtに書き込む
+        MongoClient.connect(url,(error,client)=>{
+            var db = client.db("heroku_v52vjggz");
+            db.collection("products",(error,collection)=>{//コレクションはテーブルと同じ
+                collection.find().toArray((error,docs)=>{
+                    const stream = fs.createWriteStream("user.txt");
+                    for(let doc of docs){        
+                        // console.log("型:"+typeof(doc.id));
+                        stream.write(doc.id+"\n");
+                    
+                        // エラー処理
+                        stream.on("error", (err)=>{
+                            if(err)
+                            console.log(err.message);
+                        });
+                    } 
+                    stream.end("\n");
+                
+                });
+                client.close();
+            });
+        });
+
+        res.redirect('./login.html');        
+    }
+
+
 });
 
 app.get('/login.html',(req,res)=>{
