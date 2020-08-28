@@ -56,6 +56,7 @@ export default class Game{
         this.sceneDungeon1 = true;
         this.sceneTown=false;
         this.kansokujoNames=[];// 観測所のエフェクトに使用,地名、雨量の連想配列
+        this.tweens=[];
 
 
         // サウンド関連
@@ -73,7 +74,7 @@ export default class Game{
         
         //フィルター
         this.pixelateFilter =new PIXI.filters.PixelateFilter();
-        this.pixelateFilter.size = 2; //ドット荒さ
+        this.pixelateFilter.size = 0.01; //ドット荒さ
         this.glowFilter=new PIXI.filters.GlowFilter({ distance: 15, outerStrength: 10,color: 0xffffff});
 
 
@@ -238,10 +239,13 @@ export default class Game{
 
     }
 
-
+    let x = (j * 48)-48+offsetX;
+    
    //雨 線を描く
     for(let c=0;c<uryou;c++){
 
+        let beforeX = (j * 48)-48+offsetX;
+        let beforeY = (i * 48)-100;
         
         let line = new PIXI.Graphics()
         .lineStyle(1, 0x0000FF)   // 線のスタイル指定(幅, 色) これ以外に透明度, alignment(線の位置)などが指定可能
@@ -253,6 +257,8 @@ export default class Game{
         this.rainContainer.addChild(line); //コンテナにスプライトを入れる
         this.app.stage.addChild(this.rainContainer);
         
+        ;
+
         let tween1=TweenMax.to(line, 0.5, //完了までの時間
         {   
             pixi: { 
@@ -260,7 +266,7 @@ export default class Game{
 
             },
             ease: Power1.easeInOut, 
-            repeat: -1,
+            repeat: -1,//無限リピート
             repeatDelay: ( Math.random() * 1),
             yoyo: true,
             onRepeat: function(){
@@ -270,7 +276,10 @@ export default class Game{
                
 
                 // 雲の下に反映されるバージョン
-                line.x = (j * 48)-48+offsetX+Math.floor( Math.random() * 48)-8+weatherOffsetFix;
+                console.log("座標aaaa"+line.x);
+                line.x = x;
+                line.x = line.x+Math.floor( Math.random() * 48)-offsetX;
+                // if(line.x>x){line.x=x;}
                 tween1.restart(true,true);
 
                 
@@ -279,6 +288,9 @@ export default class Game{
 
         }
         ); //tween終わり
+
+        //使用したtweenを格納して、次のターンで使用した変数を削除する準備をする
+        this.tweens.push(tween1);
 
         if(offsetX == 48 && offsetY == 0){
             TweenMax.to(line, 0.125, 

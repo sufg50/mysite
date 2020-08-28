@@ -26,6 +26,11 @@ export default class BackGroundMap{
         game.weatherContainer.removeChildren();
         game.rainContainer.removeChildren();
 
+        //前回移動時のtweenアニメーションを停止後、tweenオブジェクトが格納された変数も消去する。    
+        game.tweens.forEach(tween => {
+            tween.kill();
+        });
+        game.tweens=[];
 
         if(game.sceneDungeon1){
             // 本当はコンテナごとにリセットしなければいけないが、今からは大変なため固定描画だけ再セットのようにしておく。

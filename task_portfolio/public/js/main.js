@@ -28160,11 +28160,15 @@ module.exports = function(module) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Player; });
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_0__);
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
 
 var Player = /*#__PURE__*/function () {
   function Player(x, y, dx, dy) {
@@ -28187,6 +28191,7 @@ var Player = /*#__PURE__*/function () {
     this.animeDir;
     this.mvCharacterAnime = [];
     this.loader = new PIXI.Loader();
+    this.attackFlag = false;
   }
 
   _createClass(Player, [{
@@ -28505,7 +28510,12 @@ var BackGroundMap = /*#__PURE__*/function () {
 
       game.gameScene1.removeChildren();
       game.weatherContainer.removeChildren();
-      game.rainContainer.removeChildren();
+      game.rainContainer.removeChildren(); //前回移動時のtweenアニメーションを停止後、tweenオブジェクトが格納された変数も消去する。    
+
+      game.tweens.forEach(function (tween) {
+        tween.kill();
+      });
+      game.tweens = [];
 
       if (game.sceneDungeon1) {
         // 本当はコンテナごとにリセットしなければいけないが、今からは大変なため固定描画だけ再セットのようにしておく。
@@ -29640,7 +29650,8 @@ var Game = /*#__PURE__*/function () {
     this.sceneDungeon1 = true;
     this.sceneTown = false;
     this.kansokujoNames = []; // 観測所のエフェクトに使用,地名、雨量の連想配列
-    // サウンド関連
+
+    this.tweens = []; // サウンド関連
 
     this.stepsSound = PIXI.sound.Sound.from('/storage/music/load.wav');
     this.decisionSound = PIXI.sound.Sound.from('/storage/music/decision22.mp3');
@@ -29655,7 +29666,7 @@ var Game = /*#__PURE__*/function () {
     this.moneyPickUpSound.volume = 0.1; //フィルター
 
     this.pixelateFilter = new PIXI.filters.PixelateFilter();
-    this.pixelateFilter.size = 2; //ドット荒さ
+    this.pixelateFilter.size = 0.01; //ドット荒さ
 
     this.glowFilter = new PIXI.filters.GlowFilter({
       distance: 15,
@@ -29812,10 +29823,13 @@ var Game = /*#__PURE__*/function () {
 
       if (player.animeDir == "LEFT") {
         weatherOffsetFix = 48;
-      } //雨 線を描く
+      }
 
+      var x = j * 48 - 48 + offsetX; //雨 線を描く
 
       var _loop = function _loop(c) {
+        var beforeX = j * 48 - 48 + offsetX;
+        var beforeY = i * 48 - 100;
         var line = new PIXI.Graphics().lineStyle(1, 0x0000FF) // 線のスタイル指定(幅, 色) これ以外に透明度, alignment(線の位置)などが指定可能
         .moveTo(10, 25) // 開始点に移動
         .lineTo(10, 40); // (x,y)に向かって直線を引く      
@@ -29829,6 +29843,7 @@ var Game = /*#__PURE__*/function () {
 
         _this.app.stage.addChild(_this.rainContainer);
 
+        ;
         var tween1 = TweenMax.to(line, 0.5, //完了までの時間
         {
           pixi: {
@@ -29836,6 +29851,7 @@ var Game = /*#__PURE__*/function () {
           },
           ease: Power1.easeInOut,
           repeat: -1,
+          //無限リピート
           repeatDelay: Math.random() * 1,
           yoyo: true,
           onRepeat: function onRepeat() {
@@ -29843,10 +29859,16 @@ var Game = /*#__PURE__*/function () {
             // line.y = Math.floor( Math.random() * 528);
             // line.x = Math.floor( Math.random() * 720);
             // 雲の下に反映されるバージョン
-            line.x = j * 48 - 48 + offsetX + Math.floor(Math.random() * 48) - 8 + weatherOffsetFix;
+            console.log("座標aaaa" + line.x);
+            line.x = x;
+            line.x = line.x + Math.floor(Math.random() * 48) - offsetX; // if(line.x>x){line.x=x;}
+
             tween1.restart(true, true);
           }
         }); //tween終わり
+        //使用したtweenを格納して、次のターンで使用した変数を削除する準備をする
+
+        _this.tweens.push(tween1);
 
         if (offsetX == 48 && offsetY == 0) {
           TweenMax.to(line, 0.125, {

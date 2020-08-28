@@ -1,3 +1,5 @@
+import { delay } from "lodash";
+
 export default class Player{
 
     constructor( x, y,dx,dy ) {
@@ -15,6 +17,7 @@ export default class Player{
         this.animeDir;
         this.mvCharacterAnime = [];
         this.loader = new PIXI.Loader(); 
+        this.attackFlag=false;
 
     }
 
@@ -132,7 +135,7 @@ dirMoveAnimetion(playerAnime,offsetX,offsetY){
                         x: playerAnime.x  -30, 
                     },
                     ease: Power0.easeNone, 
-                    repeat: 0
+                    repeat: 0,
                 }
             );            
         }else if(offsetX == -48 && offsetY == 0){
@@ -162,7 +165,8 @@ dirMoveAnimetion(playerAnime,offsetX,offsetY){
                         y: playerAnime.y +30, 
                     },
                     ease: Power0.easeNone, 
-                    repeat: 0
+                    repeat: 0,
+
                 }
             );            
         }         
