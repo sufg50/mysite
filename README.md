@@ -10,7 +10,7 @@
 <p>(ID)test1@test.com</p>
 <p>(PASSWARD)password</p>
 <h1>DBテーブル構造</h1>
-<img width="600" src="https://user-images.githubusercontent.com/52999407/95173930-54241e80-07f4-11eb-95ed-2aef878ba5c9.jpg">
+<img width="700" src="https://user-images.githubusercontent.com/52999407/95173930-54241e80-07f4-11eb-95ed-2aef878ba5c9.jpg">
 
 
 
