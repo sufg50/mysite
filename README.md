@@ -2,6 +2,8 @@
 <p>アメダスマップとダンジョン(githubファイル名：task_portfolio)</p>
 <h1>概要</h1>
 <p>海岸線の緯度経度から日本地図データを作成し、ゲームMAPにそのデータを使い、ゲーム内から今の天気情報を知る。</p>
+<h1>目指したこと</h1>
+<p>データの連携と活用。緯度経度をエクセルの表に落とし込んだことなど。</p>
 <h1>開発環境</h1>
 <p>Laravel6.*,PHP,JavaScript,Python, Pixi.js,TweenMax.js,HTML, CSS, MySQL, heroku,Excel,QGIS</p>
 <h1>アプリURL</h1>
@@ -9,6 +11,8 @@
 <h1>テスト用アカウント</h1>
 <p>(ID)test1@test.com</p>
 <p>(PASSWARD)password</p>
+<h1>利用方法</h1>
+<p>矢印キーで移動。Ｚで攻撃。（ダンジョン内のみ）</p>
 <h1>DBテーブル構造</h1>
 <img width="700" src="https://user-images.githubusercontent.com/52999407/95173930-54241e80-07f4-11eb-95ed-2aef878ba5c9.jpg">
 
