@@ -62,7 +62,7 @@ class TolkController extends Controller
         $my_id = $request->input('my_user_id');
         $friend_id=$request->input('to_user_id');
         
-        dd($contents,$my_id,$friend_id);
+        dd($request);
          return view('tolk.index',compact("contents",'my_id','friend_id'));
 
     }
