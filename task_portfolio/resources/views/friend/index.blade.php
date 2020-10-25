@@ -41,9 +41,9 @@
                                     @csrf
                                     <input type="hidden" name="my_user_id" value="{{ $my_user_id }}" />
                                     <input type="hidden" name="to_user_id" value="{{ $contact['user_id'] }}" />
-                                    <button type="submit" class="btn btn-primary">
+                                    {{-- <button type="submit" class="btn btn-primary">
                                     <p>トークする<p>
-                                    </button>
+                                    </button> --}}
                                 </form>
                                  </td>
                                 {{-- <td><a href="{{ route('who_search.apply',['id'=> $contact['user_id']]) }}">トークする。ID:{{ $contact['user_id'] }}</a></td> --}}
