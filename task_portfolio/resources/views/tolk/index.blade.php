@@ -117,7 +117,7 @@
         })
         //読み込み失敗のとき
         .fail(function(){
-            //window.alert('読み込みエラー');
+            window.alert('読み込みエラー');
          });
         console.log("回数"+count++);
         //setTimeoutには関数オブジェクトを渡さないと無限ループエラー
