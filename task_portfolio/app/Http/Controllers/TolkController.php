@@ -20,6 +20,7 @@ class TolkController extends Controller
      */
     public function index(Request $request)
     {
+        dd($request);
         //２レコードを登録
 
         $my_id = $request->input('my_user_id');
