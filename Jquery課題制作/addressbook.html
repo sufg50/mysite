@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<link rel="stylesheet" type="text/css" href="addressbook.css"/>
+<script type="text/javascript" src="jquery-2.1.3.js"></script>
+<script type="text/javascript" src="addressbook.js"></script>
+</head>
+<body>
+
+<h1>申込フォーム</h1>
+
+<table id="editor">
+<thead>
+<tr>
+  <th colspan="2">必要事項を記入してください</th>
+</tr>
+</thead>
+<tbody>
+<tr><th>氏名</th><td><input type="text" id="name" value="a"/></td></tr>
+<tr><th>郵便番号</th><td><input type="text" id="postalcode" value="500-1234"/></td></tr>
+<tr><th>メール</th><td><input type="text" id="mailaddress" value="ab@yahoo.co.jp"/></td></tr>
+<tr><th>プラン</th><td><label><input id="aplan" type="radio" name="plan" value="Aプラン">Aプラン</label>
+<label><input id="bplan" type="radio" name="plan" value="Bプラン">Bプラン</label></td></tr>
+<tr><th>自由記述欄</th><td><textarea id="memo" value="a"></textarea></td></tr>
+</tbody>
+</table>
+
+<div align="center">
+<button id="delete">削除</button><button id="save">申込</button>
+</div>
+
+<h1>申込完了リスト</h1>
+
+<table id="list">
+  <thead><tr>
+  <th class="name">氏名</th><th class="postalcode">郵便番号</th>
+  <th class="mailaddress">メール</th><th class="plan">プラン</th><th class="memo">メモ</th>
+  </tr></thead>
+  <tbody>
+  </tbody>
+</table>
+
+</body>
+</html>

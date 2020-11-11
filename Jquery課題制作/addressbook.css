@@ -1,0 +1,74 @@
+table{
+	width:90%;
+	margin:1rem auto 2rem auto;
+	border:1px solid #999;
+	border-collapse:collapse
+}
+
+th{
+	text-align:center;
+}
+
+th,td{
+	border:1px solid #999;
+	padding:15px;
+}
+
+/* 申込フォーム */
+
+#editor>thead{
+	background-color:lightblue;
+}
+#editor>tbody th, #editor>tfoot th{
+	width:20%;
+	text-align:left;
+}
+
+
+/* 申込フォーム内の操作ボタン */
+button{
+	padding:15px 30px;
+}
+
+#delete {
+	margin-right:2em;
+	display:none;
+}
+
+/* 入力欄の強調のためのクラス（focused）指定 */
+#editor .focused{
+	background-color:yellow;
+}
+
+
+/* 一覧表示用テーブル */
+
+#list>thead th{
+	background-color:pink;
+}
+#list>thead th.name{
+	width:15%;
+}
+#list>thead th.postalcode{
+	width:15%;
+}
+#list>thead th.mailaddress{
+	width:25em;
+}
+#list>thead th.mailaddress{
+	width:15%;
+}
+#list>thead th.memo {
+	width:30%;
+}
+
+/* マウスが乗っている行の表示のためのクラス（hover）指定 */
+#list>tbody>tr:hover th{
+	border-top:1.5px solid blue;
+	border-bottom:1.5px solid blue;
+}
+
+/* マウスでクリックして選択した行の表示のためのクラス（selected）指定 */
+#list>tbody>tr.selected{
+	background-color:lightblue;
+}
