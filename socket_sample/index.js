@@ -6,7 +6,8 @@ const { resolve } = require('path');
 var http = require('http').createServer(app);
 var port = process.env.PORT || 5000;
 var MongoClient = require("mongodb").MongoClient;
-var url = "mongodb://heroku_v52vjggz:gjdrohmubrprcpjm81svdl2aq9@ds131432.mlab.com:31432/heroku_v52vjggz";
+var url = "mongodb+srv://hitomi0078:nozomi2Ad@cluster0.upa3r.mongodb.net/heroku_v52vjggz?retryWrites=true&w=majority";
+// var url = "mongodb://heroku_v52vjggz:gjdrohmubrprcpjm81svdl2aq9@ds131432.mlab.com:31432/heroku_v52vjggz";
 app.use(bodyParser.urlencoded({
     extended: true
 }));
